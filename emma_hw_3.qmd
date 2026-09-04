@@ -1,0 +1,20 @@
+---
+title: "emma_hw_3"
+format: html
+editor: visual
+---
+
+# TASK ONE
+
+1.  If your working directory is myfolder/homework/, what relative path would you specify to get the file
+    located at myfolder/MyData.csv?
+    1.  read.csv('MyData.csv')
+2.  What are the major benefits of using R projects?
+    1.  An R project folder can be used as a working directory, so the paths to things should work for other users.
+    2.  Other people can download an R project and work on it seamlessly, allowing for easy collaboration.
+3.  What is Git and what is GitHub?
+    1.  Git is a type of version control software.
+    2.  Github is a hosting service for Git based projects.
+4.  What are the two main differences between a tibble and a data.frame?
+    1.  The default print() method for a tibble is different from a data.frame.
+    2.  Tibbles do not coerce down to a vector when you subset to only one column using \[.
