@@ -6,8 +6,7 @@ editor: visual
 
 # TASK ONE
 
-1.  If your working directory is myfolder/homework/, what relative path would you specify to get the file
-    located at myfolder/MyData.csv?
+1.  If your working directory is myfolder/homework/, what relative path would you specify to get the file located at myfolder/MyData.csv?
     1.  read.csv('MyData.csv')
 2.  What are the major benefits of using R projects?
     1.  An R project folder can be used as a working directory, so the paths to things should work for other users.
@@ -18,3 +17,39 @@ editor: visual
 4.  What are the two main differences between a tibble and a data.frame?
     1.  The default print() method for a tibble is different from a data.frame.
     2.  Tibbles do not coerce down to a vector when you subset to only one column using \[.
+
+# TASK TWO
+
+*Installing tidyverse*
+
+```{r}
+install.packages("tidyverse")
+```
+
+*Reading in glass and yeast datasets and renaming columns*
+
+```{r}
+library(tidyverse)
+glass_data <- read_csv('https://www4.stat.ncsu.edu/online/datasets/glass.data',
+                       col_names = c('Id', 'RI', 'Na', 'Mg', 'Al', 'Si', 'K', 'Ca', 'Ba', 'Fe', 'glass_type'))
+glass_data
+
+yeast_data <- read_table('https://www4.stat.ncsu.edu/online/datasets/yeast.data',
+                         col_names = c('gvh', 'alm', 'mit', 'erl', 'pox', 'vac', 'nuc', 'class'))
+yeast_data
+```
+
+# TASK THREE
+
+```{r}
+library(readxl)
+wine_data <- read_excel('white-wine.xlsx',
+                        sheet = excel_sheets('white-wine.xlsx')[1],
+                        col_names = c('fixed_acidity', 'volatile_acidity', 'citric_acid', 'residual_sugar', 'chlorides', 'free_sulfur_dioxide', 'total_sulfur_dioxide', 'density', 'pH', 'sulphates', 'alcohol', 'quality'))
+wine_data
+
+wine_data_2 <- read_excel('white-wine.xlsx',
+                          sheet = excel_sheets('white-wine.xlsx')[2])
+wine_data_2
+
+```
