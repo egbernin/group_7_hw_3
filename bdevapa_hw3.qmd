@@ -1,0 +1,199 @@
+---
+title: "bdevapa_hw3"
+format: html
+---
+
+# Task 1: Conceptual Questions
+
+### 1. Relative Path
+
+"../MyData.csv"
+  
+### 2. Benefits of R projects
+
+R projects let you organize your projects (in this case assignments) easily with all related files in one place. .Rproj file contains instructions for R Studio on how to open the project between sessions. In also provides source control integration in this case it is Git. 
+
+### 3. Git and GitHub
+
+Git is a version control technology that let's an individual or team effectively contribute to a projector task. Developers make changes, stage them and create commits that are snapshots of code at that particular point in time. This makes it easy to track history, collaborate, create branches and forks, merge and sometimes revert the changes (say toa w working version). 
+  
+GitHub is a cloud based platform that let's you host your Git projects. Essentially, a GitHub repo URL becomes the remote/origin for the source code. Individual/team can clone the repo, make changes locally, create branches, and push the changes to back to GitHub. GitHub also provides collaboration and development feature such as pull requests, issue tracking, code reviews, and CI/CD tools
+
+Git and GitHub together form the foundation for CI/CD aspect of software/data engineering projects.
+
+
+### 4. Differences between tibble and data.frame
+
+1. A `tibble` is a stricter version of `data.frame` that makes programming with former more consistent and predictable 
+2. `tibble` prints data better than `data.frame`
+3. `tibble` doesn't coerce down a vector when you subset to only one using `[`
+
+
+# Task 2: Reading Delimited Data
+
+### Task 1
+
+```{r}
+#1
+library(tidyverse)
+glass_data <- read_delim("https://www4.stat.ncsu.edu/~online/datasets/glass.data",
+                         delim = ",",
+                         col_names = c("Id","RI","Na","Mg","Al","Si","K","Ca","Ba","Fe","Type of Glass"))
+glass_data
+```
+
+### Task 2
+
+```{r}
+#2
+library(tidyverse)
+yeast_data <- read_fwf("https://www4.stat.ncsu.edu/~online/datasets/yeast.data",
+                         fwf_widths (c(12,6,6,6,6,6,6,6,6,3),
+                         c("seq_name","mcg","gvh","alm","mit","erl","pox","vac","nuc","class")))
+yeast_data
+```
+
+# Section 3: Combining Excel and Delimited Data
+
+### Task: 3 Read Excel 
+
+```{r}
+library(readxl)
+white_wine_data <- read_excel("data/white-wine.xlsx")
+#total 12 columns 
+white_wine_data
+```
+
+### Task: 4 Read and apply standard column names from 2nd sheet of excel 
+
+```{r}
+col_names_data <- read_excel("data/white-wine.xlsx", 
+                            sheet = excel_sheets("data/white-wine.xlsx")[2])
+colnames(white_wine_data) <- col_names_data$Variables
+white_wine_data
+```
+
+### Task: 5 Add new column to white wine data to indicate its white wine
+
+```{r}
+#5 add white wine column name
+white_wine_data$white_or_red <- c("white")
+white_wine_data[ , 10:13]
+```
+
+### Task: 6 repeat 3-5 for red wine
+
+```{r}
+library(readr)
+#this file is not a CSV despite its csv file extension
+red_wine_data <- read_delim("data/red-wine.csv", delim=";")
+#total 12 columns 
+colnames(red_wine_data) <- col_names_data$Variables
+
+red_wine_data$white_or_red <- c("red")
+red_wine_data
+
+```
+### Task: 7 - Combine white & red tibbles 
+
+```{r}
+combined_tbl <- dplyr::bind_rows(white_wine_data, red_wine_data)
+
+combined_tbl
+
+```
+
+# Section - 4 - Writing a Function
+
+### Task 8: Write `getIQR` function
+
+```{r}
+getIQR <- function(x, ...) {
+ q <- quantile(x, probs = c(0.25, 0.75),...)
+ x[x >= q[1] & x <= q[2]]
+}
+```
+
+### Task 9: Apply function to task t tibble 
+
+
+```{r}
+
+fixed_acidity_iqr <- getIQR(combined_tbl$fixed_acidity)
+fixed_acidity_iqr
+
+citrix_acid_iqr <- getIQR(combined_tbl$citric_acid)
+citrix_acid_iqr
+
+```
+
+
+### Task 10: Write `getCoefVar` function
+
+```{r}
+getCoefVar <- function(x,...) {
+ coef <- sd(x,...)/abs(mean(x,...))
+}
+```
+
+### Task 11: Apply function `getCoefVar` to task t tibble 
+
+
+```{r}
+
+fixed_acidity_coef <- getCoefVar(combined_tbl$fixed_acidity)
+fixed_acidity_coef
+
+citrix_acid_coef <- getCoefVar(combined_tbl$citric_acid)
+citrix_acid_coef
+
+```
+
+### Task 12: Write `getSummaries` function
+
+```{r}
+getSummaries <- function(x,...) {
+ summary <- list(
+   iqr_values = getIQR(x,...),
+   coef = getCoefVar(x,...)
+ )
+}
+```
+
+### Task 13: Repeat question 9/11 with `getSummaries` function
+
+
+```{r}
+
+# the homework problem says apply it to question-2 however below looks more reasonable -- possible there was a typo
+
+fixed_acidity_summary <- getSummaries(combined_tbl$fixed_acidity)
+fixed_acidity_summary
+
+citrix_acid_summary <- getSummaries(combined_tbl$citric_acid)
+citrix_acid_summary
+
+```
+
+### Task 14: Create your own `infix` method for `cbind`
+
+```{r}
+
+`%cbind%` <- function(...) {
+  cbind(...)
+} 
+
+df1 <- data.frame(unif = runif(10), norm = rnorm(10))
+df2 <- data.frame(gamma = rgamma(10, shape = 1), beta = rbeta(10, shape1 = 5, shape2 = 1))
+vec1 <- rnorm(10, mean = 10)
+
+df1
+df2
+vec1
+
+df1 %cbind% df2
+
+df1 %cbind% df2 %cbind% vec1
+
+```
+
