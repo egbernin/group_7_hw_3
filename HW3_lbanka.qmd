@@ -140,25 +140,63 @@ editor: visual
 
     **Solution:**
 
+    ```{r}
+    #Create IQR functions to calculate the range
+    getIQR <- function(x, ...) {
+      q <- quantile(x, probs = c(0.25, 0.75), ...)
+      unname(q[2] - q[1])
+    }
+    ```
+
 9.  Take the object from question 7 and apply the getIRQ() function to the fixed_acidity and citric_acid columns (two function calls).
 
     **Solution:**
+
+    ```{r}
+    #Calculate the IQR for fixed acidity and citric acid
+
+    getIQR(wine_data$fixed_acidity)
+    getIQR(wine_data$citric_acid)
+    ```
 
 10. Write another function (call it getCoefVar) that returns the sample coefficient of variation, defined as the sample standard deviation divided by the absolute value of the sample mean. Allow the function to pass unnamed arguments to sd and mean.
 
     **Solution:**
 
+    ```{r}
+    #Function to calculate the coefficient of varaiation
+    getCoefVar<- function(x, ...){sd(x, ...)/abs(mean(x,...))}
+    ```
+
 11. Repeat question 9 using the getCoefVar() function.
 
     **Solution:**
+
+    ```{r}
+    #Caluculating the coeff of variation for fixed acid and citric acid
+    getCoefVar(wine_data$fixed_acidity)
+    getCoefVar(wine_data$citric_acid)
+    ```
 
 12. Create a function (call it getSummaries) that takes in a vector and returns both the IQR and the coefficient of variation. Do not rewrite your above two functions, call them. When returning your values, give them appropriate names. (This would be called a wrapper function.)
 
     **Solution:**
 
+    ```{r}
+    #Function that returns both IQR and coeff of variation
+    getSummaries<- function(x,...){c(IQR=getIQR(x,...), CoefVar=getCoefVar(x,...))}
+    ```
+
 13. Repeat question 2 with the getSummaries() function.
 
     **Solution:**
+
+    ```{r}
+    #Calculating both the summaries for fixed acidity and citric acid
+
+    getSummaries(wine_data$fixed_acidity)
+    getSummaries(wine_data$citric_acid)
+    ```
 
 14. Write your own infix function that can be used in replace of the cbind function (feel free to call the cbind function in your function :) Check that the function works on the two data frames below (df1 & df2) and then all three objects (df1, df2, vec1)!
 
@@ -169,3 +207,20 @@ editor: visual
     vec1 \<- rnorm(10, mean = 10)
 
     **Solution:**
+
+    ```{r}
+    #Creating two dataframes and then vector
+
+    df1 <- data.frame(unif = runif(10), norm = rnorm(10))
+    df2 <- data.frame(gamma = rgamma(10, shape = 1), beta = rbeta(10, shape1 = 5, shape2 = 1))
+    vec1 <- rnorm(10, mean = 10)
+    df1 
+    df2 
+    vec1 
+    # Create an infix function that works like cbind() and test 
+    '%cb%' <- function(x, y) {cbind(x, y)} 
+    df1 %cb% df2 
+    df1 %cb% df2 %cb% vec1
+
+
+    ```
