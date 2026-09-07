@@ -71,21 +71,68 @@ editor: visual
 
     **Solution:**
 
+    ```{r}
+    library(tidyverse)
+    library(readxl)
+
+    #Read and print the white wine data
+    white_wine<- read_excel("White-wine.xlsx",sheet=1)
+    white_wine
+    ```
+
 4.  When you print the data set out to the console, you may notice that some of the variable names are surrounded by backticks. This is because they are non-standard (they include a space in them). We can rename them in a number of ways. We’ll do it by reading in the variable names from the 2nd sheet of the same file. 3 • Read in the data from the 2nd sheet. This should return a data frame with one column containing alternative versions of the variable names. • Grab that column and overwrite the current column names (colnames()) of your white wine tibble. Note that colnames(object) allows for ‘left hand side assignment’. That is, you can call it on the left and store an object in it to overwrite it. Similar to names(object) \<- c(...)
 
     **Solution:**
+
+    ```{r}
+
+    #Read whitewine names from 2nd sheet and replace the column names then Print
+
+    white_names<- read_excel("white-wine.xlsx", sheet=2)
+    colnames(white_wine)<-white_names[[1]]
+    white_wine
+
+    ```
 
 5.  Lastly, add a column to this data set to indicate the wines are white. That is, add a column that has values of ‘white’ for every observation. You can do this via the \$ operator or, if you know it already, the mutate() function from dplyr.
 
     **Solution:**
 
+    ```{r}
+    #Adding column names showing that these are white wines and printing
+    white_wine <- white_wine |>
+      mutate(type = "white")
+
+    white_wine
+    ```
+
 6.  There is a semi-colon delimited version of the red wine data set available at <https://www4.stat.ncsu.> edu/\~online/datasets/red-wine.csv. • Read this in using the readr package. Be careful that the columns are read in as the correct type! • You should replace the variable names as done above • You should append a column denoting the type as “red”
 
     **Solution:**
 
+    ```{r}
+    #Read the red wine data from the url and print
+    red_wine <- read_delim(
+      "https://www4.stat.ncsu.edu/~online/datasets/red-wine.csv",
+      delim = ";"
+    )
+    colnames(red_wine) <- white_names[[1]]
+    red_wine <- red_wine %>%
+      mutate(type = "red")
+    red_wine
+    ```
+
 7.  Combine these two data sets into one data set. They both have the exact same columns so this is an easy append task! • Use the dplyr::bind_rows() function (see the help) to create one tibble containing all of the wine data.
 
     **Solution:**
+
+    ```{r}
+
+    #Combining both wine data's and prinitng
+
+    wine_data<- bind_rows(white_wine, red_wine)
+    wine_data
+    ```
 
 **Task 4: Writing a Function**
 
