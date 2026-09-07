@@ -52,4 +52,24 @@ wine_data_2 <- read_excel('white-wine.xlsx',
                           sheet = excel_sheets('white-wine.xlsx')[2])
 wine_data_2
 
+wine_data$color <- "WHITE"
+wine_data
+
+red_wine_data <- read_csv('red-wine.csv',
+                          col_names = c('fixed_acidity', 'volatile_acidity', 'citric_acid', 'residual_sugar', 'chlorides', 'free_sulfur_dioxide', 'total_sulfur_dioxide', 'density', 'pH', 'sulphates', 'alcohol', 'quality'))
+red_wine_data$color <- 'RED'
+red_wine_data
+
+combined_wine_data <- dplyr::bind_rows(wine_data, red_wine_data, .id = NULL)
+combined_wine_data
+```
+
+# TASK FOUR
+
+```{r}
+getIQR <- function(vector){
+  return(quantile(0.75) - quantile(0.25))
+  col_names = FALSE
+}
+
 ```
