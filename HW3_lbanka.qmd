@@ -11,17 +11,27 @@ editor: visual
 
     **Solution:**
 
+    The relative path would be ../MyData.csv and '..' is the parent folder.
+
 2.  What are the major benefits of using R projects?
 
     **Solution:**
+
+    R Projects helps to keep files organized since each project has its own working directory and source doucments.This also make it easier to use relative paths.
 
 3.  What is Git and what is GitHub?
 
     **Solution:**
 
+    Git is a tool that tracks the changes made to a file, whereas GitHub is a platform for storing and sharing Git projects
+
 4.  What are the two main differences between a tibble and a data.frame?
 
     **Solution:**
+
+    - Tibble has cleaner and more compact display when we print than dataframes. We can only see the data that is useful to us to see.
+
+    - Tibble keeps the structure when selecting a single column, while a dataframe can turn the selected column to a vector.
 
 **Task 2 Reading Delimited Data**
 
@@ -29,9 +39,31 @@ editor: visual
 
     **Solution:**
 
+    ![]()
+
+    ```{r}
+    #Reading and Printing out glass data
+    library(tidyverse)
+
+    glass_data <- read_csv(
+      "https://www4.stat.ncsu.edu/~online/datasets/glass.data",
+      col_names = c("Id","RI","Na","Mg","Al","Si","K","Ca","Ba","Fe","Type")
+    )
+    glass_data
+    ```
+
 2.  Read this data into R directly from the URL using functions from the tidyverse. Notice that the data doesn’t include column names - add those (in a manner of your choosing). Print out the tibble (just call the object name).
 
     **Solution:**
+
+    ```{r}
+    #Reading and printing out yeast data
+    yeast_data <- read_table(
+      "https://www4.stat.ncsu.edu/~online/datasets/yeast.data",
+      col_names = c("seq_name", "mcg","gvh", "alm","mit","erl","pox","vac","nuc","class")
+    )
+    yeast_data
+    ```
 
 **Task 3: Combining Excel and Delimited Data**
 
