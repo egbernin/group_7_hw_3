@@ -29,11 +29,15 @@ install.packages("tidyverse")
 *Reading in glass and yeast datasets and renaming columns*
 
 ```{r}
+#Reading in tidyverse
 library(tidyverse)
+
+#Reading in glass data and renaming columns
 glass_data <- read_csv('https://www4.stat.ncsu.edu/online/datasets/glass.data',
                        col_names = c('Id', 'RI', 'Na', 'Mg', 'Al', 'Si', 'K', 'Ca', 'Ba', 'Fe', 'glass_type'))
 glass_data
 
+#Reading in yeast data and renaming columns
 yeast_data <- read_table('https://www4.stat.ncsu.edu/online/datasets/yeast.data',
                          col_names = c('gvh', 'alm', 'mit', 'erl', 'pox', 'vac', 'nuc', 'class'))
 yeast_data
@@ -41,35 +45,91 @@ yeast_data
 
 # TASK THREE
 
+*Reading in sheet 1 and 2 for the white wine data, as well as renaming columns and adding in **Color** column. Also reading in red wine data, renaming columns, and adding **Color** column. Finally, both datasets were combined*.
+
 ```{r}
+#Reading in readxl package
 library(readxl)
+
+#Reading in wine data and renaming columns
 wine_data <- read_excel('white-wine.xlsx',
                         sheet = excel_sheets('white-wine.xlsx')[1],
                         col_names = c('fixed_acidity', 'volatile_acidity', 'citric_acid', 'residual_sugar', 'chlorides', 'free_sulfur_dioxide', 'total_sulfur_dioxide', 'density', 'pH', 'sulphates', 'alcohol', 'quality'))
 wine_data
 
+#Reading in wine data sheet 2
 wine_data_2 <- read_excel('white-wine.xlsx',
                           sheet = excel_sheets('white-wine.xlsx')[2])
 wine_data_2
 
+#Adding in color column
 wine_data$color <- "WHITE"
 wine_data
 
+#Reading in red wine data and renaming columns
 red_wine_data <- read_csv('red-wine.csv',
                           col_names = c('fixed_acidity', 'volatile_acidity', 'citric_acid', 'residual_sugar', 'chlorides', 'free_sulfur_dioxide', 'total_sulfur_dioxide', 'density', 'pH', 'sulphates', 'alcohol', 'quality'))
+
+#Adding in color column
 red_wine_data$color <- 'RED'
 red_wine_data
 
+#Combining wine datasets
 combined_wine_data <- dplyr::bind_rows(wine_data, red_wine_data, .id = NULL)
 combined_wine_data
+
+#Changing fixed acidity and citric acid variables to numeric for future tasks
+library(dplyr)
+combined_wine_data <- combined_wine_data %>%
+  mutate(fixed_acidity = as.numeric(fixed_acidity))
+combined_wine_data <- combined_wine_data %>%
+  mutate(citric_acid = as.numeric(citric_acid))
 ```
 
 # TASK FOUR
 
+*Writing **getIQR**, **getCoefVar**, and **getSummaries** functions. Also writing **infix** function and testing to see if it works*.
+
 ```{r}
-getIQR <- function(vector){
-  return(quantile(0.75) - quantile(0.25))
-  col_names = FALSE
+#Writing getIQR function
+getIQR <- function(x,...) {
+  q <- quantile(x, probs = 0.75, ...) - quantile(x, probs = 0.25, ...)
+  unname (q[1]-q[2])
 }
 
+#Performing getIQR function on combined wine data variables
+getIQR(combined_wine_data$fixed_acidity)
+getIQR(combined_wine_data$citric_acid)
+
+#Writing getCoefVar function
+getCoefVar <- function(x,...){
+  coef <- sd(x,...)/abs(mean(x,...))
+}
+
+#Performing getCoefVar function on combined wine data variables
+getCoefVar(combined_wine_data$fixed_acidity)
+getCoefVar(combined_wine_data$citric_acid)
+
+#Writing getSummaries function
+getSummaries <- function(x,...){
+  c(IQR = getIQR(x,...), CoefVar = getCoefVar(x,...))
+}
+
+#Performing getSummaries function on combined wine data variables
+getSummaries(combined_wine_data$fixed_acidity)
+getSummaries(combined_wine_data$citric_acid)
+
+#Writing infix function
+'%cbind%' <- function(x,y){
+  cbind(x,y)
+}
+
+#Making data frames and vector
+df1 <- data.frame(unif = runif(10), norm = rnorm(10))
+df2 <- data.frame(gamma = rgamma(10, shape = 1), beta = rbeta(10, shape1 = 5, shape2 = 1))
+vec1 <- rnorm(10, mean = 10)
+
+#Testing infix function
+df1 %cbind% df2
+df1 %cbind% df2 %cbind% vec1
 ```
