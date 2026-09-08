@@ -90,8 +90,7 @@ combined_wine_data
 ```{r}
 #Writing getIQR function
 getIQR <- function(x,...) {
-  q <- quantile(x, probs = 0.75, ...) - quantile(x, probs = 0.25, ...)
-  unname (q[1]-q[2])
+  q <- quantile(x, probs = 0.75, names = FALSE, ...) - quantile(x, probs = 0.25, names = FALSE, ...)
 }
 
 #Performing getIQR function on combined wine data variables
