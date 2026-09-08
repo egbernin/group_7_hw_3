@@ -51,10 +51,9 @@ yeast_data
 #Reading in readxl package
 library(readxl)
 
-#Reading in wine data and renaming columns
+#Reading in wine data
 wine_data <- read_excel('white-wine.xlsx',
-                        sheet = excel_sheets('white-wine.xlsx')[1],
-                        col_names = c('fixed_acidity', 'volatile_acidity', 'citric_acid', 'residual_sugar', 'chlorides', 'free_sulfur_dioxide', 'total_sulfur_dioxide', 'density', 'pH', 'sulphates', 'alcohol', 'quality'))
+                        sheet = excel_sheets('white-wine.xlsx')[1],)
 wine_data
 
 #Reading in wine data sheet 2
@@ -62,13 +61,17 @@ wine_data_2 <- read_excel('white-wine.xlsx',
                           sheet = excel_sheets('white-wine.xlsx')[2])
 wine_data_2
 
+#Changing column names
+colnames(wine_data) <- wine_data_2$Variables
+wine_data
+
 #Adding in color column
 wine_data$color <- "WHITE"
 wine_data
 
-#Reading in red wine data and renaming columns
-red_wine_data <- read_csv('red-wine.csv',
-                          col_names = c('fixed_acidity', 'volatile_acidity', 'citric_acid', 'residual_sugar', 'chlorides', 'free_sulfur_dioxide', 'total_sulfur_dioxide', 'density', 'pH', 'sulphates', 'alcohol', 'quality'))
+#Reading in red wine data and changing column names
+red_wine_data <- read_delim('red-wine.csv', delim = ';')
+colnames(red_wine_data) <- wine_data_2$Variables
 
 #Adding in color column
 red_wine_data$color <- 'RED'
@@ -78,12 +81,6 @@ red_wine_data
 combined_wine_data <- dplyr::bind_rows(wine_data, red_wine_data, .id = NULL)
 combined_wine_data
 
-#Changing fixed acidity and citric acid variables to numeric for future tasks
-library(dplyr)
-combined_wine_data <- combined_wine_data %>%
-  mutate(fixed_acidity = as.numeric(fixed_acidity))
-combined_wine_data <- combined_wine_data %>%
-  mutate(citric_acid = as.numeric(citric_acid))
 ```
 
 # TASK FOUR
