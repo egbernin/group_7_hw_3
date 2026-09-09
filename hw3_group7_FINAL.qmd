@@ -77,7 +77,7 @@ editor: visual
 
     ```{r}
     #Reading in data
-    red_wine_data <- read_delim("red-wine.csv", delim= ";")
+    red_wine_data <- read_delim("data/red-wine.csv", delim= ";")
 
     #Changing column names
     colnames(red_wine_data) <- column_names$Variables
